@@ -141,18 +141,25 @@ For example, when working with a local web server, you can use 'Restore Workspac
 
 For developers who want to work with Aider's source code integrated with Cline and Code Server, we provide a turnkey Docker-based development environment. This setup allows you to:
 
+- Use the **pre-installed Cline VS Code extension** in a web-based Code Server
 - Modify and run Aider directly from source
-- Use Cline for AI-assisted development
-- Access everything through a web-based Code Server interface
+- Access everything through Code Server at http://localhost:8080
 - Execute plain-English commands like "Run aider on this repo" or "Commit my changes"
 
 **Quick Start:**
+```bash
+make build  # Build Docker image with Cline extension
+make up     # Start the environment
+# Access Code Server at http://localhost:8080
+```
+
+Or using docker compose directly:
 ```bash
 docker compose up -d
 # Access Code Server at http://localhost:8080
 ```
 
-For detailed instructions and complete documentation, see **[DOCKER_INDEX.md](DOCKER_INDEX.md)**.
+For detailed instructions and complete documentation, see **[DOCKER_INDEX.md](DOCKER_INDEX.md)** or **[DOCKER_QUICK_START.md](DOCKER_QUICK_START.md)**.
 
 ## Contributing
 

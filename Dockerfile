@@ -38,8 +38,8 @@ RUN apt-get update && apt-get install -y \
 # Install Code Server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
-# Install Cline globally
-RUN npm install -g cline
+# Install VS Code Extension Manager (vsce) globally for packaging extensions
+RUN npm install -g @vscode/vsce
 
 # Clone and install Aider from source
 RUN git clone https://github.com/paul-gauthier/aider.git ${AIDER_PATH} \
@@ -65,12 +65,30 @@ RUN mkdir -p ${WORKSPACE}
 # Symlink Aider source to workspace for easy editing
 RUN ln -s ${AIDER_PATH} ${WORKSPACE}/aider
 
-# Set workspace as working directory
-WORKDIR ${WORKSPACE}
-
-# Copy Cline integration helper script
+# Copy helper scripts first (small files, cache-friendly)
 COPY scripts/cline-integration.sh /usr/local/bin/cline-integration.sh
 RUN chmod +x /usr/local/bin/cline-integration.sh
+
+# Copy the entire Opencline repository to build the extension
+COPY . /tmp/opencline-build
+
+# Build and package the Cline VS Code extension
+RUN cd /tmp/opencline-build \
+    && echo "Installing dependencies for extension build..." \
+    && npm install --production --ignore-scripts || true \
+    && echo "Building webview..." \
+    && npm run build:webview || echo "Webview build skipped" \
+    && echo "Packaging extension..." \
+    && vsce package --out /tmp/cline.vsix || echo "Extension packaging failed, continuing..." \
+    && if [ -f /tmp/cline.vsix ]; then \
+         code-server --install-extension /tmp/cline.vsix && echo "✓ Cline extension installed in Code Server"; \
+       else \
+         echo "⚠ Cline extension not installed - package build failed"; \
+       fi \
+    && rm -rf /tmp/opencline-build
+
+# Set workspace as working directory
+WORKDIR ${WORKSPACE}
 
 # Create bashrc additions for automatic loading
 RUN echo "" >> /root/.bashrc && \

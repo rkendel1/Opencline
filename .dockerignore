@@ -60,3 +60,6 @@ locales
 evals
 walkthrough
 assets
+
+# Docker workspace (will be mounted as volume)
+workspace/

@@ -13,6 +13,13 @@ Choose the document that best fits your needs:
   - Troubleshooting
   - Environment variables
 
+### Extension Setup
+- **[DOCKER_EXTENSION.md](DOCKER_EXTENSION.md)** - VS Code extension packaging
+  - How the Cline extension is packaged and installed
+  - Manual packaging instructions
+  - Customization options
+  - Troubleshooting extension issues
+
 ### Examples and Workflows
 - **[DOCKER_WORKFLOWS.md](DOCKER_WORKFLOWS.md)** - Real-world usage examples
   - Developing Aider features
@@ -58,8 +65,8 @@ make up
 
 ## 📦 What's Included
 
+- ✅ **Cline Extension** - Pre-installed VS Code extension (packaged during build)
 - ✅ **Aider** - AI pair programming (from source, editable)
-- ✅ **Cline** - AI coding assistant
 - ✅ **Code Server** - Web-based VS Code
 - ✅ **GitHub CLI** - Git operations
 - ✅ **Supabase CLI** - Backend development
