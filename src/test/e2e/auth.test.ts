@@ -4,26 +4,13 @@ import { e2e } from "./utils/helpers"
 // Test for setting up API keys
 e2e("Views - can set up API keys and navigate to Settings from Chat", async ({ sidebar }) => {
 	// Use the page object to interact with editor outside the sidebar
-	// Verify initial state
-	await expect(sidebar.getByRole("button", { name: "Get Started for Free" })).toBeVisible()
-	await expect(sidebar.getByRole("button", { name: "Use your own API key" })).toBeVisible()
-
-	// Navigate to API key setup
-	await sidebar.getByRole("button", { name: "Use your own API key" }).click()
-
+	// Verify initial state - authentication has been removed, so welcome view shows API options directly
 	const providerSelectorInput = sidebar.getByTestId("provider-selector-input")
 
-	// Verify provider selector is visible
+	// Verify provider selector is visible on welcome screen
 	await expect(providerSelectorInput).toBeVisible()
 
-	// Test Cline provider option
-	await providerSelectorInput.click({ delay: 100 })
-	// Wait for dropdown to appear and find Cline option
-	await expect(sidebar.getByTestId("provider-option-cline")).toBeVisible()
-	await sidebar.getByTestId("provider-option-cline").click({ delay: 100 })
-	await expect(sidebar.getByRole("button", { name: "Sign Up with Cline" })).toBeVisible()
-
-	// Switch to OpenRouter and complete setup
+	// Test switching to OpenRouter and completing setup
 	await providerSelectorInput.click({ delay: 100 })
 	await sidebar.getByTestId("provider-option-openrouter").click({ delay: 100 })
 
@@ -36,7 +23,6 @@ e2e("Views - can set up API keys and navigate to Settings from Chat", async ({ s
 	const submitButton = sidebar.getByRole("button", { name: "Let's go!" })
 	await expect(submitButton).toBeEnabled()
 	await submitButton.click({ delay: 100 })
-	await expect(sidebar.getByRole("button", { name: "Get Started for Free" })).not.toBeVisible()
 
 	// Verify start up page is no longer visible
 	await expect(apiKeyInput).not.toBeVisible()
