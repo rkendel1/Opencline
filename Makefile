@@ -70,4 +70,7 @@ init: ## Initialize environment with .env file
 		echo ".env file already exists"; \
 	fi
 
+validate: ## Validate Docker extension setup
+	@./scripts/validate-extension-setup.sh
+
 .DEFAULT_GOAL := help
