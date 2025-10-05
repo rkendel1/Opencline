@@ -137,6 +137,23 @@ For example, when working with a local web server, you can use 'Restore Workspac
 
 <img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
 
+## Docker Development Environment
+
+For developers who want to work with Aider's source code integrated with Cline and Code Server, we provide a turnkey Docker-based development environment. This setup allows you to:
+
+- Modify and run Aider directly from source
+- Use Cline for AI-assisted development
+- Access everything through a web-based Code Server interface
+- Execute plain-English commands like "Run aider on this repo" or "Commit my changes"
+
+**Quick Start:**
+```bash
+docker compose up -d
+# Access Code Server at http://localhost:8080
+```
+
+For detailed instructions and complete documentation, see **[DOCKER_INDEX.md](DOCKER_INDEX.md)**.
+
 ## Contributing
 
 To contribute to the project, start with our [Contributing Guide](CONTRIBUTING.md) to learn the basics. You can also join our [Discord](https://discord.gg/cline) to chat with other contributors in the `#contributors` channel. If you're looking for full-time work, check out our open positions on our [careers page](https://cline.bot/join-us)!

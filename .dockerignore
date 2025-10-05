@@ -1,0 +1,62 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node modules
+node_modules
+webview-ui/node_modules
+testing-platform/node_modules
+**/node_modules
+
+# Build outputs
+dist
+dist-standalone
+out
+webview-ui/build
+*.vsix
+
+# Test files
+.vscode-test
+.nyc_output
+coverage
+test-results
+tests-results
+
+# Development files
+.husky
+.changeset
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Temporary files
+*.tmp
+*.temp
+/tmp
+
+# Lock files (can be large)
+package-lock.json
+
+# Documentation (not needed in container)
+docs
+locales
+
+# Specific to this repo
+evals
+walkthrough
+assets

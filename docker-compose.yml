@@ -1,0 +1,42 @@
+services:
+  cline-aider-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cline-aider-dev-env
+    ports:
+      # Code Server web interface
+      - "8080:8080"
+    volumes:
+      # Persistent workspace for user projects
+      - ./workspace:/workspace
+      # Optional: Mount SSH keys for GitHub access
+      - ~/.ssh:/root/.ssh:ro
+      # Optional: Mount git config
+      - ~/.gitconfig:/root/.gitconfig:ro
+    environment:
+      # GitHub token for API access and push/pull
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      # Supabase access token
+      - SUPABASE_ACCESS_TOKEN=${SUPABASE_ACCESS_TOKEN}
+      # Code Server authentication (none by default)
+      - CODE_SERVER_AUTH=none
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    # Optional: Uncomment to add Ollama service for local models
+    # depends_on:
+    #   - ollama
+
+  # Optional: Uncomment to run Ollama in a separate container
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama-data:/root/.ollama
+  #   restart: unless-stopped
+
+# volumes:
+#   ollama-data:
