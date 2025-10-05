@@ -251,3 +251,9 @@ volumes:
 ## License
 
 This Docker configuration is part of the Opencline project. See the main repository LICENSE file for details.
+
+## Additional Resources
+
+- [DOCKER_WORKFLOWS.md](DOCKER_WORKFLOWS.md) - Example workflows and use cases
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contributing to Opencline
+- [Aider Documentation](https://aider.chat) - Official Aider documentation
