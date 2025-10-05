@@ -118,37 +118,12 @@ export class AuthService {
 	/**
 	 * Returns the current authentication token with the appropriate prefix.
 	 * Refreshing it if necessary.
+	 * 
+	 * NOTE: Authentication has been disabled in Opencline - always returns null
 	 */
 	async getAuthToken(): Promise<string | null> {
-		try {
-			let clineAccountAuthToken = this._clineAuthInfo?.idToken
-			if (!this._clineAuthInfo || !clineAccountAuthToken) {
-				// Not authenticated
-				return null
-			}
-
-			// Check if token has expired
-			if (await this._provider?.shouldRefreshIdToken(clineAccountAuthToken, this._clineAuthInfo.expiresAt)) {
-				console.log("Provider indicates token needs refresh")
-				const updatedAuthInfo = await this._provider?.retrieveClineAuthInfo(this._controller)
-				if (updatedAuthInfo) {
-					this._clineAuthInfo = updatedAuthInfo
-					this._authenticated = true
-					clineAccountAuthToken = updatedAuthInfo.idToken
-				} else {
-					this._clineAuthInfo = null
-					this._authenticated = false
-				}
-				await this.sendAuthStatusUpdate()
-			}
-
-			// IMPORTANT: Prefix with 'workos:' so backend can route verification to WorkOS provider
-			const prefix = this._provider?.name === "cline" ? "workos:" : ""
-			return clineAccountAuthToken ? `${prefix}${clineAccountAuthToken}` : null
-		} catch (error) {
-			console.error("Error getting auth token:", error)
-			return null
-		}
+		// Authentication disabled - always return null
+		return null
 	}
 
 	protected _setProvider(providerName: string): void {
@@ -188,56 +163,19 @@ export class AuthService {
 	}
 
 	async createAuthRequest(): Promise<String> {
-		if (this._authenticated) {
-			this.sendAuthStatusUpdate()
-			return String.create({ value: "Already authenticated" })
-		}
-
-		if (!this._provider) {
-			return String.create({
-				value: "Authentication provider is not configured",
-			})
-		}
-
-		const callbackHost = await HostProvider.get().getCallbackUrl()
-		const callbackUrl = `${callbackHost}/auth`
-
-		const authUrl = await this._provider.getAuthRequest(callbackUrl)
-		const authUrlString = authUrl.toString()
-
-		await openExternal(authUrlString)
-		return String.create({ value: authUrlString })
+		// Authentication disabled in Opencline
+		return String.create({ value: "Authentication has been disabled in Opencline" })
 	}
 
 	async handleDeauth(): Promise<void> {
-		if (!this._provider) {
-			throw new Error("Auth provider is not set")
-		}
-
-		try {
-			this._clineAuthInfo = null
-			this._authenticated = false
-			this.sendAuthStatusUpdate()
-		} catch (error) {
-			console.error("Error signing out:", error)
-			throw error
-		}
+		// Authentication disabled - no-op
+		this._clineAuthInfo = null
+		this._authenticated = false
 	}
 
 	async handleAuthCallback(authorizationCode: string, provider: string): Promise<void> {
-		if (!this._provider) {
-			throw new Error("Auth provider is not set")
-		}
-
-		try {
-			this._clineAuthInfo = await this._provider.signIn(this._controller, authorizationCode, provider)
-			this._authenticated = this._clineAuthInfo?.idToken !== undefined
-
-			await this.sendAuthStatusUpdate()
-		} catch (error) {
-			console.error("Error signing in with custom token:", error)
-			throw error
-		}
+		// Authentication disabled - no-op
+		console.log("Authentication callback ignored - authentication disabled in Opencline")
 	}
 
 	/**
@@ -251,28 +189,13 @@ export class AuthService {
 	/**
 	 * Restores the authentication data from the extension's storage.
 	 * This is typically called when the extension is activated.
+	 * 
+	 * NOTE: Authentication has been disabled in Opencline - no-op
 	 */
 	async restoreRefreshTokenAndRetrieveAuthInfo(): Promise<void> {
-		if (!this._provider) {
-			throw new Error("Auth provider is not set")
-		}
-
-		try {
-			this._clineAuthInfo = await this._provider.retrieveClineAuthInfo(this._controller)
-			if (this._clineAuthInfo) {
-				this._authenticated = true
-				await this.sendAuthStatusUpdate()
-			} else {
-				console.warn("No user found after restoring auth token")
-				this._authenticated = false
-				this._clineAuthInfo = null
-			}
-		} catch (error) {
-			console.error("Error restoring auth token:", error)
-			this._authenticated = false
-			this._clineAuthInfo = null
-			return
-		}
+		// Authentication disabled - no-op
+		this._authenticated = false
+		this._clineAuthInfo = null
 	}
 
 	/**

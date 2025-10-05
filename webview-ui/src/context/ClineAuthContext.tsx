@@ -95,23 +95,11 @@ export const useClineAuth = () => {
 }
 
 export const handleSignIn = async () => {
-	try {
-		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
-			console.error("Failed to get login URL:", err),
-		)
-	} catch (error) {
-		console.error("Error signing in:", error)
-		throw error
-	}
+	// Authentication disabled - no-op
+	console.log("Sign-in has been disabled in Opencline")
 }
 
 export const handleSignOut = async () => {
-	try {
-		await AccountServiceClient.accountLogoutClicked(EmptyRequest.create()).catch((err) =>
-			console.error("Failed to logout:", err),
-		)
-	} catch (error) {
-		console.error("Error signing out:", error)
-		throw error
-	}
+	// Authentication disabled - no-op
+	console.log("Sign-out has been disabled in Opencline")
 }

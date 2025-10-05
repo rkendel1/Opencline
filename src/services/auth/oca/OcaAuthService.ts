@@ -102,63 +102,19 @@ export class OcaAuthService {
 	}
 
 	async getAuthToken(): Promise<string | null> {
-		this.requireController()
-		// Ensure we have a state with a token
-		if (!this._ocaAuthState || !this._ocaAuthState.apiKey) {
-			await this.refreshAuthState()
-			return this._ocaAuthState?.apiKey ?? null
-		}
-
-		const apiKey = this._ocaAuthState.apiKey
-
-		// Check if the token should be refreshed
-		let shouldRefresh = false
-		try {
-			shouldRefresh = await this.requireProvider().shouldRefreshAccessToken(apiKey)
-		} catch {
-			// If the provider check fails, err on the side of refreshing
-			shouldRefresh = true
-		}
-
-		if (shouldRefresh) {
-			await this.refreshAuthState()
-		}
-
-		return this._ocaAuthState?.apiKey ?? null
+		// OCA Authentication disabled in Opencline - always return null
+		return null
 	}
 
 	async createAuthRequest(): Promise<ProtoString> {
-		this.requireController()
-		if (this._authenticated) {
-			this.sendAuthStatusUpdate()
-			return ProtoString.create({ value: "Already authenticated" })
-		}
-		if (!this._config.idcs_url) {
-			throw new Error("IDCS URI is not configured")
-		}
-		// Start the auth handler
-		const authHandler = AuthHandler.getInstance()
-		authHandler.setEnabled(true)
-		const callbackUrl = `${await authHandler.getCallbackUrl()}/auth/oca`
-		const authUrl = this.requireProvider().getAuthUrl(callbackUrl!)
-		const authUrlString = authUrl?.toString() || ""
-		if (!authUrlString) {
-			throw new Error("Failed to generate authentication URL")
-		}
-		await openExternal(authUrlString)
-		return ProtoString.create({ value: authUrlString })
+		// OCA Authentication disabled in Opencline
+		return ProtoString.create({ value: "OCA Authentication has been disabled in Opencline" })
 	}
 
 	async handleDeauth(): Promise<void> {
-		try {
-			this.clearAuth()
-			this._ocaAuthState = null
-			this._authenticated = false
-			await this.sendAuthStatusUpdate()
-		} catch (error) {
-			console.error("Error signing out:", error)
-			throw error
-		}
+		// OCA Authentication disabled - no-op
+		this._ocaAuthState = null
+		this._authenticated = false
 	}
 
 	private clearAuth(): void {
@@ -167,69 +123,19 @@ export class OcaAuthService {
 	}
 
 	async handleAuthCallback(code: string, state: string): Promise<void> {
-		const provider = this.requireProvider()
-		const ctrl = this.requireController()
-		try {
-			this._ocaAuthState = await provider.signIn(ctrl, code, state)
-			this._authenticated = true
-			await this.sendAuthStatusUpdate()
-		} catch (error) {
-			console.error("Error signing in with custom token:", error)
-			throw error
-		} finally {
-			const authHandler = AuthHandler.getInstance()
-			authHandler.setEnabled(false)
-		}
+		// OCA Authentication disabled - no-op
+		console.log("OCA Authentication callback ignored - authentication disabled in Opencline")
 	}
 
 	async restoreRefreshTokenAndRetrieveAuthInfo(): Promise<void> {
-		const provider = this.requireProvider()
-		const ctrl = this.requireController()
-		try {
-			this._ocaAuthState = await provider.retrieveOcaAuthState(ctrl)
-			if (this._ocaAuthState) {
-				this._authenticated = true
-				await this.sendAuthStatusUpdate()
-				return
-			}
-			console.warn("No user found after restoring auth token")
-			await this.kickstartInteractiveLoginAsFallback()
-		} catch (error) {
-			console.error("Error restoring auth token:", error)
-			await this.kickstartInteractiveLoginAsFallback(error)
-		}
+		// OCA Authentication disabled - no-op
+		this._authenticated = false
+		this._ocaAuthState = null
 	}
 
 	private async kickstartInteractiveLoginAsFallback(_err?: unknown): Promise<void> {
-		// Clear any stale secrets and broadcast unauthenticated state
-		this.clearAuth()
-		this._authenticated = false
-		this._ocaAuthState = null
-		await this.sendAuthStatusUpdate()
-
-		// Avoid repeated/looping login attempts
-		if (this._interactiveLoginPending) {
-			return
-		}
-		this._interactiveLoginPending = true
-		try {
-			// Kickstart interactive login (opens browser)
-			await this.createAuthRequest()
-			// Wait up to 60 seconds for user to complete login
-			const timeoutMs = 60_000
-			const pollMs = 250
-			const start = Date.now()
-			while (!this._authenticated && Date.now() - start < timeoutMs) {
-				await new Promise((r) => setTimeout(r, pollMs))
-			}
-			if (!this._authenticated) {
-				console.warn("Interactive OCA login timed out after 120 seconds")
-			}
-		} catch (e) {
-			console.error("Failed to initiate interactive OCA login:", e)
-		} finally {
-			this._interactiveLoginPending = false
-		}
+		// OCA Authentication disabled - no-op
+		console.log("Interactive login disabled in Opencline")
 	}
 
 	async subscribeToAuthStatusUpdate(
