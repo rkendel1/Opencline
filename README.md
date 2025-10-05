@@ -152,7 +152,7 @@ docker compose up -d
 # Access Code Server at http://localhost:8080
 ```
 
-For detailed instructions, see [DOCKER.md](DOCKER.md).
+For detailed instructions and complete documentation, see **[DOCKER_INDEX.md](DOCKER_INDEX.md)**.
 
 ## Contributing
 
