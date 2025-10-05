@@ -49,12 +49,12 @@ RUN git clone https://github.com/paul-gauthier/aider.git ${AIDER_PATH} \
 # Install Supabase CLI
 RUN SUPABASE_VERSION=$(curl -s https://api.github.com/repos/supabase/cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/') \
     && ARCH=$(dpkg --print-architecture) \
-    && if [ "$ARCH" = "amd64" ]; then ARCH="linux-amd64"; elif [ "$ARCH" = "arm64" ]; then ARCH="linux-arm64"; fi \
-    && curl -LO "https://github.com/supabase/cli/releases/download/v${SUPABASE_VERSION}/supabase_${SUPABASE_VERSION}_${ARCH}.tar.gz" \
-    && tar -xzf "supabase_${SUPABASE_VERSION}_${ARCH}.tar.gz" \
-    && mv supabase /usr/local/bin/supabase \
-    && rm "supabase_${SUPABASE_VERSION}_${ARCH}.tar.gz" \
-    && chmod +x /usr/local/bin/supabase
+    && if [ "$ARCH" = "amd64" ]; then ARCH="amd64"; elif [ "$ARCH" = "arm64" ]; then ARCH="arm64"; fi \
+    && URL="https://github.com/supabase/cli/releases/download/v${SUPABASE_VERSION}/supabase_${SUPABASE_VERSION}_linux_${ARCH}.deb" \
+    && echo "Downloading $URL" \
+    && curl -fL -o supabase.deb "$URL" \
+    && apt-get update && apt-get install -y ./supabase.deb \
+    && rm supabase.deb
 
 # Optional: Uncomment to install Ollama for local models
 # RUN curl -fsSL https://ollama.com/install.sh | sh
