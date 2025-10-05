@@ -4,9 +4,9 @@ This Docker-based development environment provides a turnkey setup for modifying
 
 ## Features
 
+- **Cline Extension**: Pre-installed VS Code extension, ready to use immediately
 - **Aider from Source**: Aider is cloned to `/opt/aider` and installed in development mode, making it easy to modify and test changes
 - **Code Server**: Web-based VS Code interface accessible at `http://localhost:8080`
-- **Cline**: AI-powered coding assistant installed globally
 - **GitHub CLI**: For seamless Git operations and GitHub integration
 - **Supabase CLI**: For local Supabase development
 - **Python 3.11+**: Required for Aider development
@@ -34,13 +34,21 @@ This Docker-based development environment provides a turnkey setup for modifying
    # Edit .env and add your tokens
    ```
 
-3. **Start the environment**:
+3. **Build and start the environment**:
+   ```bash
+   make build  # Builds Docker image and packages Cline extension
+   make up     # Starts the environment
+   ```
+   
+   Or using docker compose directly:
    ```bash
    docker compose up -d
    ```
 
 4. **Access Code Server**:
    Open your browser and navigate to `http://localhost:8080`
+   
+   **The Cline extension is already installed and ready to use!**
 
 ## Usage
 
@@ -254,6 +262,7 @@ This Docker configuration is part of the Opencline project. See the main reposit
 
 ## Additional Resources
 
+- [DOCKER_EXTENSION.md](DOCKER_EXTENSION.md) - VS Code extension packaging and installation details
 - [DOCKER_WORKFLOWS.md](DOCKER_WORKFLOWS.md) - Example workflows and use cases
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contributing to Opencline
 - [Aider Documentation](https://aider.chat) - Official Aider documentation

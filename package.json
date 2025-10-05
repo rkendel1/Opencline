@@ -332,6 +332,8 @@
 		"dev:webview": "cd webview-ui && npm run dev",
 		"build:webview": "cd webview-ui && npm run build",
 		"test:webview": "cd webview-ui && npm run test",
+		"package:vsix": "vsce package --out dist/cline.vsix",
+		"package:docker": "scripts/package-extension.sh",
 		"publish:marketplace": "vsce publish --allow-package-secrets sendgrid && ovsx publish",
 		"publish:marketplace:prerelease": "vsce publish --allow-package-secrets sendgrid --pre-release && ovsx publish --pre-release",
 		"publish:marketplace:nightly": "node ./scripts/publish-nightly.mjs",

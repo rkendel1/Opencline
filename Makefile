@@ -9,11 +9,26 @@ help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 build: ## Build the Docker image
+	@echo "Building Docker image with Cline extension..."
 	docker compose build
+	@echo "✓ Build complete!"
 
 up: ## Start the environment
 	docker compose up -d
-	@echo "Environment started. Access Code Server at http://localhost:8080"
+	@echo ""
+	@echo "=================================="
+	@echo "✓ Environment started successfully!"
+	@echo "=================================="
+	@echo ""
+	@echo "Access Code Server at: http://localhost:8080"
+	@echo ""
+	@echo "The Cline extension is pre-installed and ready to use."
+	@echo ""
+	@echo "Useful commands:"
+	@echo "  make logs    - View container logs"
+	@echo "  make shell   - Open a shell in the container"
+	@echo "  make down    - Stop the environment"
+	@echo ""
 
 down: ## Stop the environment
 	docker compose down
