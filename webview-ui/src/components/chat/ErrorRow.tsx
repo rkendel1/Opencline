@@ -1,8 +1,7 @@
 import { ClineMessage } from "@shared/ExtensionMessage"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
 import CreditLimitError from "@/components/chat/CreditLimitError"
-import { handleSignIn, useClineAuth } from "@/context/ClineAuthContext"
+import { useClineAuth } from "@/context/ClineAuthContext"
 import { ClineError, ClineErrorType } from "../../../../src/services/error/ClineError"
 
 const _errorColor = "var(--vscode-errorForeground)"
@@ -76,16 +75,10 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 								<>
 									<br />
 									<br />
-									{/* The user is signed in or not using cline provider */}
-									{clineUser && !isClineProvider ? (
-										<span className="mb-4 text-[var(--vscode-descriptionForeground)]">
-											(Click "Retry" below)
-										</span>
-									) : (
-										<VSCodeButton className="w-full mb-4" onClick={handleSignIn}>
-											Sign in to Cline
-										</VSCodeButton>
-									)}
+									{/* Authentication has been disabled in Opencline */}
+									<span className="mb-4 text-[var(--vscode-descriptionForeground)]">
+										Authentication has been disabled. Please configure your API keys in Settings.
+									</span>
 								</>
 							)}
 						</p>
